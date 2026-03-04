@@ -18,7 +18,7 @@
 
 <br/>
 
-**[Notebook](notebooks/) &nbsp;|&nbsp; [Dataset](data/) &nbsp;|&nbsp; [Visuals](images/)**
+**[Notebook](notebooks/) &nbsp;|&nbsp; [Visuals](images/)**
 
 </div>
 
@@ -28,7 +28,7 @@
 
 - [Project Overview](#project-overview)
 - [Project Highlights](#project-highlights)
-- [Dataset](#dataset)
+- [Data Description](#data-description)
 - [Methodology](#methodology)
   - [Data Preprocessing and Feature Engineering](#1-data-preprocessing-and-feature-engineering)
   - [Exploratory Data Analysis](#2-exploratory-data-analysis)
@@ -66,16 +66,20 @@ Two separate tasks were completed as part of this program:
 | Feature Engineering | Created an `Urgent_Booking` flag from `purchase_lead` to capture last-minute bookings |
 | Class Imbalance Handling | Applied SMOTE to address an 88/12 class split between incomplete and complete bookings |
 | Multiple Models Compared | Logistic Regression, Random Forest, and XGBoost trained and evaluated side by side |
-| Balanced vs Unbalanced | Each model tested both on the raw imbalanced data and on SMOTE-resampled data |
+| Balanced vs Unbalanced | Each model tested on both the raw imbalanced data and SMOTE-resampled data |
 | Program Context | Completed as part of the British Airways Virtual Experience on Forage |
 
 ---
 
-## Dataset
+## Data Description
 
-The dataset used for Task 2 is `customer_booking.csv`, which contains booking records for British Airways customers. There are no missing values in the dataset.
+The dataset used in this project is the **British Airways customer booking dataset** provided exclusively through the British Airways Virtual Experience Program on Forage. Due to the proprietary nature of the data, it is not included in this repository and cannot be shared publicly.
 
-**Columns:**
+To access the dataset and reproduce this analysis, you will need to enrol in the [British Airways Virtual Experience Program on Forage](https://www.theforage.com/simulations/british-airways/data-science-yqoz) and download the data directly from there. Enrolment is free.
+
+Once you have the file, place `customer_booking.csv` in the root of the project directory and the notebook will run as expected.
+
+**The dataset contains the following columns:**
 
 | Column | What it contains |
 |---|---|
@@ -100,7 +104,7 @@ The dataset used for Task 2 is `customer_booking.csv`, which contains booking re
 
 ### 1. Data Preprocessing and Feature Engineering
 
-The dataset arrives in fairly clean condition, but a few steps are needed before modelling:
+The dataset arrives in fairly clean condition with no missing values, but a few steps are needed before modelling:
 
 - `flight_day` is stored as text abbreviations (Mon, Tue, etc.) and is converted to integers 1 through 7 so it can be used numerically
 - Numerical and categorical columns are separated for different encoding strategies
@@ -110,17 +114,17 @@ The dataset arrives in fairly clean condition, but a few steps are needed before
 
 One new feature is also created:
 
-**`Urgent_Booking`** - a binary flag set to 1 if the customer booked within 7 days of travel. The idea is that last-minute bookers may behave differently from those who plan far in advance, and this signal could help the model distinguish between the two groups.
+**`Urgent_Booking`** is a binary flag set to 1 if the customer booked within 7 days of their travel date. The idea is that last-minute bookers may behave differently from those who plan well in advance, and this signal could help the model pick up on that difference.
 
 ---
 
 ### 2. Exploratory Data Analysis
 
-Before any modelling, the data is explored thoroughly to understand who the British Airways customers are and what their booking behaviour looks like. All analysis is focused on the full dataset as well as the subset of customers who actually completed their bookings.
+Before any modelling, the data is explored thoroughly to understand who British Airways customers are and what their booking behaviour looks like. All analysis covers the full dataset as well as the subset of customers who actually completed their bookings.
 
 **Booking Completion Status**
 
-The most important thing to notice in the data is that only around 12% of bookings are completed. This is a significant class imbalance and becomes the central challenge for modelling.
+The most important thing to notice straight away is that only around 12% of bookings are completed. This heavy imbalance is the central challenge for modelling and shapes every decision made in the training process.
 
 ![Booking Status](images/booking%20status.png)
 
@@ -134,31 +138,31 @@ Some countries generate significantly more bookings than others. The top 5 count
 
 **Sales Channel**
 
-The majority of bookings come through the Internet rather than Mobile. This reflects the general trend in airline booking behaviour where desktop and web-based platforms still dominate.
+The majority of bookings come through the Internet rather than Mobile. This reflects the general trend in airline booking where web-based platforms still dominate over mobile apps.
 
 ![Sales Channel](images/sales%20channel.png)
 
 **Trip Type**
 
-Round trips are by far the most common booking type among customers.
+Round trips are by far the most common booking type among customers, with one-way and circle trips making up a much smaller share.
 
 ![Trip Type](images/trip%20type.png)
 
 **Most Common Routes**
 
-Among customers who completed their bookings, a small number of routes account for a large share of completed reservations. The Auckland to Kuala Lumpur (AKLKUL) route is the single most common route in this group.
+Among customers who completed their bookings, a small number of routes account for a large share of completed reservations. The Auckland to Kuala Lumpur route (AKLKUL) is the single most common route in this group.
 
 ![Common Routes](images/common%20routes.png)
 
 **Flight Departure Hours**
 
-Completed bookings cluster around certain departure hours. Understanding when customers prefer to fly can inform scheduling and marketing decisions.
+Completed bookings cluster around certain departure hours, suggesting that time of day plays a role in whether customers follow through with a reservation.
 
 ![Flight Hours](images/flight%20hours.png)
 
 **Flight Duration**
 
-Most completed bookings are for long-haul flights, suggesting that customers who go through with their bookings tend to be travelling longer distances.
+Most completed bookings are for longer flights, suggesting that customers who go through with their bookings tend to be travelling greater distances.
 
 ![Flight Duration](images/flight%20duration.png)
 
@@ -170,7 +174,7 @@ The vast majority of completed bookings are for a single passenger, with small g
 
 **Extra Baggage**
 
-A notable portion of customers who complete their bookings do not opt for extra baggage, though a meaningful minority do. This add-on choice may correlate with trip length or travel purpose.
+A notable portion of customers who complete their bookings do not opt for extra baggage, though a meaningful minority do.
 
 ![Extra Baggage](images/extra%20baggage.png)
 
@@ -182,7 +186,7 @@ Most customers with completed bookings do not select a preferred seat, suggestin
 
 **In-Flight Meals**
 
-Similarly, in-flight meal selection skews toward not wanting meals among customers who completed bookings. However, the signal is worth keeping as a feature since it may still carry some predictive value.
+In-flight meal selection also skews toward not wanting meals among customers who completed bookings. The signal is kept as a feature since it may still carry some predictive value in combination with other columns.
 
 ![In-Flight Meals](images/in%20flight%20meals.png)
 
@@ -190,9 +194,9 @@ Similarly, in-flight meal selection skews toward not wanting meals among custome
 
 ### 3. Handling Class Imbalance with SMOTE
 
-The booking completion rate in this dataset sits at approximately 12%, meaning about 88% of records are incomplete bookings. If a model is trained on this raw split, it will naturally learn to predict "not completed" the vast majority of the time and still achieve high accuracy. This would be a misleading result.
+The booking completion rate sits at roughly 12%, meaning about 88% of records are incomplete bookings. If a model is trained on this raw split, it will naturally learn to predict "not completed" most of the time and still report high accuracy. This would be a misleading result.
 
-To address this, **SMOTE (Synthetic Minority Oversampling Technique)** is applied. SMOTE generates synthetic examples of the minority class (completed bookings) by interpolating between existing minority class samples, rather than simply duplicating them. This produces a balanced training set where the model gets an equal opportunity to learn patterns from both classes.
+To fix this, **SMOTE (Synthetic Minority Oversampling Technique)** is applied. SMOTE generates new synthetic examples of the minority class by interpolating between existing minority class samples, rather than simply copying them. This produces a balanced training set where the model gets a fair chance to learn patterns from both outcomes.
 
 Each of the three models is trained and evaluated twice: once on the original imbalanced data and once on the SMOTE-resampled data, so the effect of balancing can be directly compared.
 
@@ -202,15 +206,15 @@ Each of the three models is trained and evaluated twice: once on the original im
 
 Three models are trained and compared across both the imbalanced and SMOTE-balanced datasets.
 
-**Logistic Regression** serves as the baseline. It is simple, fast, and interpretable, making it a good reference point against which the tree-based models can be measured.
+**Logistic Regression** serves as the baseline. It is simple, fast, and easy to interpret, making it a useful reference point against which the tree-based models can be measured.
 
 **Random Forest** is an ensemble of decision trees that handles non-linear relationships well. With 100 trees and a fixed random state, it typically outperforms logistic regression on tabular data with mixed feature types.
 
-**XGBoost** is a gradient boosting model that builds trees sequentially, with each tree correcting the errors of the previous one. It is generally the strongest performer on structured tabular datasets.
+**XGBoost** builds trees one at a time, with each new tree correcting the mistakes of the previous ones. It is generally the strongest performer on structured tabular data and is the final recommended model here.
 
 All models use an 80/20 train-test split. Evaluation metrics include accuracy, precision, recall, F1 score, and a confusion matrix heatmap for each configuration.
 ```python
-# The four model configurations trained and evaluated:
+# The five model configurations trained and evaluated:
 
 # 1. Logistic Regression on raw imbalanced data
 # 2. Random Forest on raw imbalanced data
@@ -223,33 +227,31 @@ All models use an 80/20 train-test split. Evaluation metrics include accuracy, p
 
 ## Results
 
-| Model | Data | Accuracy | Notes |
-|---|---|---|---|
-| Logistic Regression | Imbalanced | ~85% | High accuracy but poor recall on completed bookings |
-| Random Forest | Imbalanced | ~85% | Similar issue, minority class largely ignored |
-| XGBoost | Imbalanced | ~85% | Same pattern without SMOTE |
-| Random Forest | SMOTE | Higher balanced recall | Significantly better at identifying completed bookings |
-| XGBoost | SMOTE | Best overall | Strongest F1 on both classes after resampling |
+| Model | Data | Notes |
+|---|---|---|
+| Logistic Regression | Imbalanced | High accuracy but poor recall on completed bookings |
+| Random Forest | Imbalanced | Similar issue, minority class largely missed |
+| XGBoost | Imbalanced | Same pattern without resampling |
+| Random Forest | SMOTE | Significantly better at identifying completed bookings |
+| XGBoost | SMOTE | Best overall, strongest F1 on both classes |
 
-The key takeaway is that raw accuracy is a misleading metric here. A model that predicts "not completed" every single time would achieve around 88% accuracy. The real improvement from SMOTE is visible in the recall and F1 score for the minority class, where the models go from essentially missing most completed bookings to catching a meaningful portion of them.
-
-XGBoost with SMOTE delivers the best overall performance across both classes and is the recommended model for this use case.
+The key takeaway is that raw accuracy is a misleading metric here. A model that always predicts "not completed" would still score around 88% accuracy. The real improvement from SMOTE shows up in the recall and F1 score for the completed-booking class, where models go from missing most of them to catching a meaningful proportion. XGBoost with SMOTE is the recommended model.
 
 ---
 
 ## Key Insights
 
-Several patterns emerge from the analysis that are worth highlighting from a business perspective.
+Several patterns come out of the analysis that are worth highlighting from a business perspective.
 
-The booking completion rate is very low at around 12%, which raises a question worth investigating further: are customers abandoning the booking process due to pricing, complexity, or other friction in the purchase flow?
+The booking completion rate of around 12% is notably low and raises a question worth investigating: are customers dropping off due to pricing, a complicated checkout flow, or something else in the purchase process?
 
-Customers booking from certain countries complete their bookings at notably higher rates than others. This could be useful for geo-targeted marketing campaigns or localised pricing strategies.
+Customers booking from certain countries complete their bookings at higher rates than others. This could be useful for targeting specific markets with tailored campaigns or localised pricing.
 
-The Auckland to Kuala Lumpur route has the highest volume of completed bookings among confirmed travellers, suggesting strong and reliable demand on this corridor.
+The Auckland to Kuala Lumpur route has the highest volume of completed bookings among confirmed travellers, pointing to strong and reliable demand on this specific corridor.
 
-Most completed bookings are for solo travellers on long-haul routes. This customer segment may respond well to targeted offers around premium add-ons, given that long-haul solo travellers tend to have more discretionary spending on comfort features.
+Most completed bookings are for solo travellers on longer routes. This segment may respond well to targeted offers on comfort add-ons, since long-haul solo travellers tend to have more flexibility in what they spend.
 
-Last-minute bookings (the `Urgent_Booking` flag, within 7 days of travel) form a distinct behavioural segment that may respond differently to pricing and availability nudges compared to advance planners.
+Last-minute bookings, captured through the `Urgent_Booking` feature for customers booking within 7 days of travel, form a distinct segment that likely responds differently to pricing nudges compared to people planning weeks or months ahead.
 
 ---
 
@@ -296,12 +298,14 @@ cd British-Airways-Analysis
 pip install pandas numpy matplotlib seaborn scikit-learn xgboost imbalanced-learn openpyxl jupyter
 ```
 
+**Get the dataset**
+
+Enrol in the [British Airways Virtual Experience Program on Forage](https://www.theforage.com/simulations/british-airways/data-science-yqoz) for free and download `customer_booking.csv`. Place it in the root of the project directory before running the notebook.
+
 **Open the notebook**
 ```bash
 jupyter notebook notebooks/Forage_British_Airways_.ipynb
 ```
-
-Place `customer_booking.csv` in the working directory or update the file path in the first cell before running.
 
 ---
 
@@ -313,7 +317,7 @@ Place `customer_booking.csv` in the working directory or update the file path in
 | Visualisation | Matplotlib, Seaborn |
 | Preprocessing | Scikit-learn (MinMaxScaler, OneHotEncoder) |
 | Class Balancing | imbalanced-learn (SMOTE) |
-| Models | Scikit-learn Logistic Regression, Random Forest, XGBoost |
+| Models | Logistic Regression, Random Forest, XGBoost |
 | Notebook | Jupyter |
 | Program | British Airways Virtual Experience on Forage |
 
@@ -325,7 +329,7 @@ Place `customer_booking.csv` in the working directory or update the file path in
 - Test additional resampling strategies such as ADASYN or class weighting as alternatives to SMOTE
 - Build a feature importance plot for the best-performing model to identify the top drivers of booking completion
 - Explore whether `purchase_lead` alone is predictive enough to build a lightweight early-warning model
-- Bring in external data such as seasonality or route pricing to enrich the feature set
+- Bring in external signals such as seasonality or route pricing to enrich the feature set
 
 ---
 
